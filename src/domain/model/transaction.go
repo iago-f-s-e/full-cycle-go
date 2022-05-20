@@ -21,16 +21,13 @@ type TransactionRepository interface {
 	Find(id string) (*Transaction, error)
 }
 
-type Transactions struct {
-	Transaction []Transaction
-}
-
 type Transaction struct {
 	Base              `valid:"-"`
+	AccountFromId     string   `gorm:"column:account_from_id;type:uuid;not null" valid:"-"`
 	AccountFrom       *Account `valid:"-" gorm:"column:account_from_id; type:uuid"`
 	Amount            float64  `json:"amount" gorm:"type:float; not null" valid:"notnull"`
-	PixKeyTo          *PixKey  `valid:"-"`
-	PixKeyIdTo        string   `gorm:"column:pix_key_id_to;type:uuid;not null" valid:"-"`
+	PixKeyID          string   `gorm:"column:pix_key_id_to;type:uuid;not null" valid:"-"`
+	PixKey            *PixKey  `valid:"-"`
 	Status            string   `json:"status" gorm:"type:varchar(20); not null" valid:"notnull"`
 	Description       string   `json:"description" gorm:"type:varchar(255); not null" valid:"notnull"`
 	CancelDescription string   `json:"cancel_description" gorm:"column:cancel_description;type:varchar(255); not null" valid:"notnull"`
@@ -41,7 +38,7 @@ func (t *Transaction) isValid() error {
 
 	isValidAmount := t.Amount > 0
 	isValidStatus := t.Status == TransactionPending || t.Status == TransactionCompleted || t.Status == TransactionError || t.Status == TransactionConfirmed
-	isValidTransaction := t.PixKeyTo.ID != t.AccountFrom.ID
+	isValidTransaction := t.PixKey.ID != t.AccountFrom.ID
 
 	if !isValidAmount {
 		return errors.New("the amount must be greater than 0")
@@ -95,7 +92,7 @@ func (t *Transaction) Error(reason string) error {
 func NewTransaction(accountFrom *Account, pixKeyTo *PixKey, amount float64, description string) (*Transaction, error) {
 	transaction := Transaction{
 		AccountFrom: accountFrom,
-		PixKeyTo:    pixKeyTo,
+		PixKey:      pixKeyTo,
 		Amount:      amount,
 		Description: description,
 	}

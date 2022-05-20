@@ -18,18 +18,19 @@ type PixKeyRepository interface {
 }
 
 type PixKey struct {
-	Base      `valid:"required"`
-	King      string   `json:"king" valid:"notnull"`
-	Key       string   `json:"key" valid:"notnull"`
-	AccountID string   `gorm:"column:account_id;type:uuid;not null" valid:"-"`
-	Account   *Account `valid:"-"`
-	Status    string   `json:"status" valid:"notnull"`
+	Base         `valid:"required"`
+	Kind         string         `json:"kind" valid:"notnull"`
+	Key          string         `json:"key" valid:"notnull"`
+	AccountID    string         `gorm:"column:account_id;type:uuid;not null" valid:"-"`
+	Account      *Account       `valid:"-"`
+	Status       string         `json:"status" valid:"notnull"`
+	Transactions []*Transaction `gorm:"ForeignKey:PixKeyID" valid:"-"`
 }
 
 func (p *PixKey) isValid() error {
 	_, err := govalidator.ValidateStruct(p)
 
-	isValidKind := p.King == "email" || p.King == "cpf"
+	isValidKind := p.Kind == "email" || p.Kind == "cpf"
 	isValidStatus := p.Status == "active" || p.Status == "inactive"
 
 	if !isValidKind {
@@ -50,7 +51,7 @@ func (p *PixKey) isValid() error {
 func NewPixKey(account *Account, kind, key string) (*PixKey, error) {
 	pixKey := PixKey{
 		Key:     key,
-		King:    kind,
+		Kind:    kind,
 		Account: account,
 	}
 

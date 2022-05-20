@@ -2,10 +2,11 @@ package useCases
 
 import (
 	"github.com/iago-f-s-e/pix-code-go/src/domain/model"
+	"github.com/iago-f-s-e/pix-code-go/src/infra/repositories"
 )
 
 type PixUseCases struct {
-	PixKeyRepository model.PixKeyRepository
+	PixKeyRepository repositories.PixKeyRepositoryDb
 }
 
 func (p *PixUseCases) RegisterKey(key, kind, accountId string) (*model.PixKey, error) {
