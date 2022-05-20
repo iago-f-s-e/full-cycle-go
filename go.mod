@@ -1,4 +1,4 @@
-module github.com/iago-f-s-e/full-cycle-go
+module github.com/iago-f-s-e/pix-code-go
 
 go 1.18
 

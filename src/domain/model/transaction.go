@@ -84,6 +84,14 @@ func (t *Transaction) Cancel(description string) error {
 	return t.isValid()
 }
 
+func (t *Transaction) Error(reason string) error {
+	t.Status = TransactionError
+	t.CancelDescription = reason
+	t.UpdatedAt = time.Now()
+
+	return t.isValid()
+}
+
 func NewTransaction(accountFrom *Account, pixKeyTo *PixKey, amount float64, description string) (*Transaction, error) {
 	transaction := Transaction{
 		AccountFrom: accountFrom,

@@ -3,7 +3,7 @@ package repositories
 import (
 	"fmt"
 
-	"github.com/iago-f-s-e/full-cycle-go/src/domain/model"
+	"github.com/iago-f-s-e/pix-code-go/src/domain/model"
 	"gorm.io/gorm"
 )
 
